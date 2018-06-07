@@ -37,6 +37,7 @@ func watchDir(filename string) {
 						continue
 					}
 				}
+				//发现文件被写入关闭则写入消息队列
 				if event.IsCloseWrite() {
 					pushQueue(event.Name)
 					fmt.Println(event.Name, " Close write")
@@ -45,7 +46,7 @@ func watchDir(filename string) {
 		case err := <-watch.Error:
 			{
 				fmt.Errorf("Err:%v", err)
-				return
+				continue
 			}
 		}
 	}
@@ -75,7 +76,6 @@ func listDir(path string) []string {
 		return nil
 	}
 	for _, fileName := range fileList {
-		//	fmt.Println(fileName.Name())
 		if fileName.IsDir() {
 			dirlist = append(dirlist, fmt.Sprintf("%s", fileName.Name()))
 			for _, k := range listDir(fmt.Sprintf("%s/%s", path, fileName.Name())) {
