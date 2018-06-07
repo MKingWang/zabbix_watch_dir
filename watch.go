@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/fsnotify/fsnotify"
+	"github.com/ericbrisrubio/fsnotify"
 )
 
 /*
@@ -15,32 +15,34 @@ func watchDir(filename string) {
 	watch, _ := fsnotify.NewWatcher()
 	defer watch.Close()
 
-	err := watch.Add(filename)
+	err := watch.Watch(filename)
 	if err != nil {
 		fmt.Errorf("监听目录失败：%v", err.Error())
 	}
 
 	//把指定目录下的所有目录都加入监控
 	for _, k := range listDir(filename) {
-		watch.Add(fmt.Sprintf("%s/%s", filename, k))
+		watch.Watch(fmt.Sprintf("%s/%s", filename, k))
 	}
 
 	for {
 		select {
-		case event := <-watch.Events:
+		case event := <-watch.Event:
 			{
-				if event.Op&fsnotify.Create == fsnotify.Create {
+				if event.IsCreate() {
 					//发现创建的文件是目录，则加入监控
 					if isDir(event.Name) {
-						watch.Add(event.Name)
+						watch.Watch(event.Name)
+						fmt.Println(event.Name, " create")
 						continue
 					}
 				}
-
-				pushQueue(event.Name)
-				fmt.Println(event.Name, " create")
+				if event.IsCloseWrite() {
+					pushQueue(event.Name)
+					fmt.Println(event.Name, " Close write")
+				}
 			}
-		case err := <-watch.Errors:
+		case err := <-watch.Error:
 			{
 				fmt.Errorf("Err:%v", err)
 				return

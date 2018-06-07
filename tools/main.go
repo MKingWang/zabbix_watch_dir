@@ -14,7 +14,7 @@ func initRedis(redisAddr string) (redis.Conn, error) {
 将节点内容写入redis队列
 */
 func gethQueue() error {
-	redisCli, err := initRedis("192.168.25.57:6379")
+	redisCli, err := initRedis("192.168.21.143:6379")
 	if err != nil {
 		fmt.Errorf("init redis err:%v", err)
 		return err
