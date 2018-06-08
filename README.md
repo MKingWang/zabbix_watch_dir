@@ -12,6 +12,4 @@ go build -o ftpNotify main.go queue.go watch.go
 ./ftpNotify dir
 ```
 
-tools 里面是测试，用于不断从队列中取出数据
-
-***关于redis地址等参数，暂时使用全局变量写死在代码中，根据需要可以移出到配置文件***
+自定义消息队列服务，监听端口建立在8888
