@@ -11,7 +11,7 @@ import (
 /*
 将监控主函数
 */
-func watchDir(filename string) {
+func watchDir(filename string, queue chan<- string) {
 	watch, _ := fsnotify.NewWatcher()
 	defer watch.Close()
 
@@ -39,7 +39,8 @@ func watchDir(filename string) {
 				}
 				//发现文件被写入关闭则写入消息队列
 				if event.IsCloseWrite() {
-					pushQueue(event.Name)
+					//pushQueue(event.Name)
+					queue <- event.Name
 					fmt.Println(event.Name, " Close write")
 				}
 			}

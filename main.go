@@ -5,9 +5,8 @@ import (
 )
 
 func main() {
+	queue := make(chan string, 100)
 	filename := os.Args[1]
-	go watchDir(filename)
-
-	select {}
-
+	go watchDir(filename, queue)
+	queueServer(queue)
 }
