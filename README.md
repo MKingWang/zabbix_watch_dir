@@ -8,8 +8,10 @@
 
 **使用方法** 
 ```
-go build -o ftpNotify main.go queue.go watch.go
-./ftpNotify dir
+make all
+cp noitfyServer noityfCli $ZABBIX_SCRIPT
+setsid ./no
+./ftpNotify $DIR
 ```
 
 自定义消息队列服务，监听端口建立在8888
