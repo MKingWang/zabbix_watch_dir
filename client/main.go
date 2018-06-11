@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -11,9 +12,9 @@ func initRedis(redisAddr string) (redis.Conn, error) {
 }
 
 /*
-将节点内容写入redis队列
+从reids获取消息
 */
-func gethQueue() error {
+func gethQueuFromRedis() error {
 	redisCli, err := initRedis("192.168.21.143:6379")
 	if err != nil {
 		fmt.Errorf("init redis err:%v", err)
@@ -34,6 +35,23 @@ func gethQueue() error {
 	return nil
 }
 
+/*
+从队列服务器获取消息
+*/
+func gethQueuFromServer() {
+	conn, err := net.Dial("tcp", "127.0.0.1:8888")
+	buf := make([]byte, 4096)
+	if err != nil {
+		fmt.Errorf("Client init error:%v", err)
+	}
+	_, err = conn.Read(buf)
+	if err != nil {
+		fmt.Errorf("%v", err)
+
+	}
+	fmt.Println(string(buf))
+}
+
 func main() {
-	gethQueue()
+	gethQueuFromServer()
 }

@@ -33,16 +33,20 @@ func watchDir(filename string, queue chan<- string) {
 					//发现创建的文件是目录，则加入监控
 					if isDir(event.Name) {
 						watch.Watch(event.Name)
-						fmt.Println(event.Name, " create")
+						queue <- fmt.Sprint("有目录被创建:", event.Name)
 						continue
 					}
+					//发现新建文件时写入消息队列
+					queue <- fmt.Sprint("有文件被创建:", event.Name)
 				}
 				//发现文件被写入关闭则写入消息队列
-				if event.IsCloseWrite() {
-					//pushQueue(event.Name)
-					queue <- event.Name
-					fmt.Println(event.Name, " Close write")
-				}
+				/*
+					if event.IsCloseWrite() {
+						//pushQueue(event.Name)
+						queue <- event.Name
+						fmt.Println(event.Name, " Close write")
+					}
+				*/
 			}
 		case err := <-watch.Error:
 			{

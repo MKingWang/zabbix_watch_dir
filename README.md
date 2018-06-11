@@ -8,8 +8,12 @@
 
 **使用方法** 
 ```
-go build -o ftpNotify main.go queue.go watch.go
-./ftpNotify dir
+make all
+cp noitfyServer noityfCli $ZABBIX_SCRIPT
+setsid ./no
+./ftpNotify $DIR
 ```
 
 自定义消息队列服务，监听端口建立在8888
+
+编写客户端程序，存放在client目录中 用于在zabbix监控时直接从server端获取文件操作
