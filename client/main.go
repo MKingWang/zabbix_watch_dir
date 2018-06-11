@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"net"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -13,7 +15,7 @@ func initRedis(redisAddr string) (redis.Conn, error) {
 /*
 将节点内容写入redis队列
 */
-func gethQueue() error {
+func gethQueuFromRedis() error {
 	redisCli, err := initRedis("192.168.21.143:6379")
 	if err != nil {
 		fmt.Errorf("init redis err:%v", err)
@@ -34,6 +36,22 @@ func gethQueue() error {
 	return nil
 }
 
+func gethQueuFromServer() {
+	conn, err := net.Dial("tcp", "127.0.0.1:8888")
+	if err != nil {
+		fmt.Errorf("Client init error:%v", err)
+	}
+
+	reader := bufio.NewReader(conn)
+	request, _, err := reader.ReadLine()
+	if err != nil {
+		fmt.Errorf("read err:%v", err)
+	}
+
+	fmt.Println(string(request))
+
+}
+
 func main() {
-	gethQueue()
+	gethQueuFromServer()
 }

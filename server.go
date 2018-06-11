@@ -26,7 +26,6 @@ func queueServer(queue chan string) {
 
 func clientHandle(conn net.Conn, queue <-chan string) {
 	defer conn.Close()
-
 	rep := <-queue
 	conn.Write([]byte(rep))
 }
